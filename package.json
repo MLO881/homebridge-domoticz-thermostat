@@ -1,0 +1,30 @@
+{
+  "name": "hombridge-domoticz-thermostat",
+  "version": "",
+  "description": "Homebridge plugin for a to built a thermostat from Domoticz",
+  "main": "index.js",
+  "dependencies": {
+    "request": ">=2.88.0",
+    "ip": ">=1.1.5"
+  },
+  "engines": {
+    "homebridge": ">=0.4.50",
+    "node": ">=12.13.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MLO881/homebridge-domoticz-thermostat.git"
+  },
+  "keywords": [
+    "homebridge-plugin"
+  ],
+  "author": "Mael Louty",
+  "license": "GNU",
+  "bugs": {
+    "url": ""
+  },
+  "homepage": ""
+}
