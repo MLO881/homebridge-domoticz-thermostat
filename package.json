@@ -16,7 +16,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MLO881/homebridge-domoticz-thermostat.git"
+    "url": "git+https://github.com/MLO881/hombridge-domoticz-thermostat.git"
   },
   "keywords": [
     "homebridge-plugin"
