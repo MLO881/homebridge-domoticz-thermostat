@@ -7,7 +7,7 @@ const http = require('http')
 module.exports = function (homebridge) {
   Service = homebridge.hap.Service
   Characteristic = homebridge.hap.Characteristic
-  homebridge.registerAccessory('homebridge-web-thermostat', 'Thermostat', Thermostat)
+  homebridge.registerAccessory('hombridge-domoticz-thermostat', 'Thermostat', Thermostat)
 }
 
 function Thermostat (log, config) {
@@ -16,10 +16,10 @@ function Thermostat (log, config) {
   this.name = config.name
   this.apiroute = config.apiroute
   this.pollInterval = config.pollInterval || 300
-
+  
   this.listener = config.listener || false
   this.port = config.port || 2000
-  this.requestArray = ['targetHeatingCoolingState', 'targetTemperature', 'coolingThresholdTemperature', 'heatingThresholdTemperature']
+  this.requestArray = ['targetHeatingCoolingState', 'targetTemperature']
 
   this.manufacturer = config.manufacturer || packageJson.author.name
   this.serial = config.serial || this.apiroute
@@ -31,7 +31,6 @@ function Thermostat (log, config) {
   this.timeout = config.timeout || 3000
   this.http_method = config.http_method || 'GET'
 
-  this.temperatureThresholds = config.temperatureThresholds || false
   this.heatOnly = config.heatOnly || false
 
   this.currentRelativeHumidity = config.currentRelativeHumidity || false
@@ -40,6 +39,11 @@ function Thermostat (log, config) {
   this.minTemp = config.minTemp || 15
   this.minStep = config.minStep || 0.5
 
+  this.currentTemperatureIdx = config.currentTemperatureIdx || null
+  this.targetTemperatureIdx = config.targetTemperatureIdx || null
+  this.targetHeatingCoolingStateIdx = config.targetHeatingCoolingState || null
+  this.currentRelativeHumidityIdx = config.currentRelativeHumidityIdx || null
+  
   if (this.username != null && this.password != null) {
     this.auth = {
       user: this.username,
@@ -47,7 +51,8 @@ function Thermostat (log, config) {
     }
   }
 
-  if (this.listener) {
+/*  listener TBC
+if (this.listener) {
     this.server = http.createServer(function (request, response) {
       var baseURL = 'http://' + request.headers.host + '/'
       var url = new URL(request.url, baseURL)
@@ -65,9 +70,10 @@ function Thermostat (log, config) {
       this.log('Listen server: http://%s:%s', ip.address(), this.port)
     }.bind(this))
   }
-
+  
   this.service = new Service.Thermostat(this.name)
 }
+*/
 
 Thermostat.prototype = {
 
@@ -91,7 +97,7 @@ Thermostat.prototype = {
   },
 
   _getStatus: function (callback) {
-    var url = this.apiroute + '/status'
+    var url = this.apiroute + '/json.htm?type=devices&rid=' //on doit ajouter les Idx
     this.log.debug('Getting status: %s', url)
 
     this._httpRequest(url, '', this.http_method, function (error, response, responseBody) {
