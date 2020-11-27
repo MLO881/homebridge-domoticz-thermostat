@@ -17,8 +17,9 @@ function Thermostat (log, config) {
   this.apiroute = config.apiroute
   this.pollInterval = config.pollInterval || 300
   
-  this.listener = config.listener || false
-  this.port = config.port || 2000
+  //listener TBC
+  //this.listener = config.listener || false
+  //this.port = config.port || 2000
   this.requestArray = ['targetHeatingCoolingState', 'targetTemperature']
 
   this.manufacturer = config.manufacturer || packageJson.author.name
@@ -39,8 +40,8 @@ function Thermostat (log, config) {
   this.minTemp = config.minTemp || 15
   this.minStep = config.minStep || 0.5
 
-  this.currentTemperatureIdx = config.currentTemperatureIdx || null
-  this.targetTemperatureIdx = config.targetTemperatureIdx || null
+  this.currentTemperatureIdx = config.currentTemperatureIdx
+  this.targetTemperatureIdx = config.targetTemperatureIdx
   this.targetHeatingCoolingStateIdx = config.targetHeatingCoolingState || null
   this.currentRelativeHumidityIdx = config.currentRelativeHumidityIdx || null
   
