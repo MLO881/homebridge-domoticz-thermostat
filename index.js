@@ -44,6 +44,7 @@ function Thermostat (log, config) {
   this.targetTemperatureIdx = config.targetTemperatureIdx
   this.targetHeatingCoolingStateIdx = config.targetHeatingCoolingState || null
   this.currentRelativeHumidityIdx = config.currentRelativeHumidityIdx || null
+  this.targetHeatingCoolingStateArray = config.targetHeatingCoolingStateArray || [0,1,2,3]
   
   if (this.username != null && this.password != null) {
     this.auth = {
