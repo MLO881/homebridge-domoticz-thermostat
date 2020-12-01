@@ -34,17 +34,16 @@ function Thermostat (log, config) {
 
   this.heatOnly = config.heatOnly || false
 
-  this.currentRelativeHumidity = config.currentRelativeHumidity || false
   this.temperatureDisplayUnits = config.temperatureDisplayUnits || 0
   this.maxTemp = config.maxTemp || 30
   this.minTemp = config.minTemp || 15
   this.minStep = config.minStep || 0.5
 
   this.currentTemperatureIdx = config.currentTemperatureIdx
+  this.currentRelativeHumidity = config.currentRelativeHumidity || null
   this.targetTemperatureIdx = config.targetTemperatureIdx
-  this.targetHeatingCoolingStateIdx = config.targetHeatingCoolingState || null
-  this.currentRelativeHumidityIdx = config.currentRelativeHumidityIdx || null
-  this.targetHeatingCoolingStateArray = config.targetHeatingCoolingStateArray || [0,1,2,3]
+  this.targetHeatingCoolingStateIdx = config.targetHeatingCoolingStateIdx || null
+  this.targetHeatingCoolingStateArray = config.targetHeatingCoolingStateArray || null  // ex : [Off, Heat, Cool, Auto] 
   
   if (this.username != null && this.password != null) {
     this.auth = {
@@ -67,7 +66,6 @@ if (this.listener) {
         response.end('Invalid request')
       }
     }.bind(this))
-
     this.server.listen(this.port, function () {
       this.log('Listen server: http://%s:%s', ip.address(), this.port)
     }.bind(this))
@@ -99,39 +97,108 @@ Thermostat.prototype = {
   },
 
   _getStatus: function (callback) {
-    var url = this.apiroute + '/json.htm?type=devices&rid=' //on doit ajouter les Idx
-    this.log.debug('Getting status: %s', url)
+	
+  //get Temperature + humidity Data  
+	var url1 = this.apiroute + '/json.htm?type=devices&rid=' + this.CurrentTemperatureIdx
+	this.log.debug('Getting status: %s', url1)
 
-    this._httpRequest(url, '', this.http_method, function (error, response, responseBody) {
-      if (error) {
-        this.log.warn('Error getting status: %s', error.message)
-        this.service.getCharacteristic(Characteristic.CurrentHeatingCoolingState).updateValue(new Error('Polling failed'))
-        callback(error)
-      } else {
-        this.log.debug('Device response: %s', responseBody)
-        var json = JSON.parse(responseBody)
-        this.service.getCharacteristic(Characteristic.TargetTemperature).updateValue(json.targetTemperature)
-        this.log.debug('Updated TargetTemperature to: %s', json.targetTemperature)
-        this.service.getCharacteristic(Characteristic.CurrentTemperature).updateValue(json.currentTemperature)
-        this.log.debug('Updated CurrentTemperature to: %s', json.currentTemperature)
-        this.service.getCharacteristic(Characteristic.TargetHeatingCoolingState).updateValue(json.targetHeatingCoolingState)
-        this.log.debug('Updated TargetHeatingCoolingState to: %s', json.targetHeatingCoolingState)
-        this.service.getCharacteristic(Characteristic.CurrentHeatingCoolingState).updateValue(json.currentHeatingCoolingState)
-        this.log.debug('Updated CurrentHeatingCoolingState to: %s', json.currentHeatingCoolingState)
-        if (this.temperatureThresholds) {
-          this.service.getCharacteristic(Characteristic.CoolingThresholdTemperature).updateValue(json.coolingThresholdTemperature)
-          this.log.debug('Updated CoolingThresholdTemperature to: %s', json.coolingThresholdTemperature)
-          this.service.getCharacteristic(Characteristic.HeatingThresholdTemperature).updateValue(json.heatingThresholdTemperature)
-          this.log.debug('Updated HeatingThresholdTemperature to: %s', json.heatingThresholdTemperature)
-        }
-        if (this.currentRelativeHumidity) {
-          this.service.getCharacteristic(Characteristic.CurrentRelativeHumidity).updateValue(json.currentRelativeHumidity)
-          this.log.debug('Updated CurrentRelativeHumidity to: %s', json.currentRelativeHumidity)
-        }
-        callback()
-      }
-    }.bind(this))
+	this._httpRequest(url1, '', this.http_method, function (error, response, responseBody) {
+	  if (error) {
+		this.log.warn('Error getting status: %s', error.message)
+		this.service.getCharacteristic(Characteristic.CurrentTemperature).updateValue(new Error('Polling failed'))
+		callback(error)
+	  } else {
+		this.log.debug('Device response: %s', responseBody)
+		var json = JSON.parse(responseBody)
+		this.service.getCharacteristic(Characteristic.CurrentTemperature).updateValue(json.result[0].Temp)
+		this.log.debug('Updated CurrentTemperature to: %s', json.result[0].Temp)
+		if (this.currentRelativeHumidity) {
+			  this.service.getCharacteristic(Characteristic.CurrentRelativeHumidity).updateValue(json.result[0].Humidity)
+			  this.log.debug('Updated CurrentRelativeHumidity to: %s', json.result[0].Humidity)
+		}
+		callback()
+	  }
+	}.bind(this))
+    
+    
+  //get Target temperature  
+	var url2 = this.apiroute + '/json.htm?type=devices&rid=' + this.TargetTemperatureIdx
+	this.log.debug('Getting status: %s', url2)
+
+	this._httpRequest(url2, '', this.http_method, function (error, response, responseBody) {
+	  if (error) {
+		this.log.warn('Error getting status: %s', error.message)
+		this.service.getCharacteristic(Characteristic.TargetTemperature).updateValue(new Error('Polling failed'))
+		callback(error)
+	  } else {
+		this.log.debug('Device response: %s', responseBody)
+		var json = JSON.parse(responseBody)
+		this.service.getCharacteristic(Characteristic.TargetTemperature).updateValue(json.result[0].SetPoint)
+		this.log.debug('Updated TargetTemperature to: %s', json.result[0].SetPoint)
+		callback()
+	  }
+	}.bind(this))	  
+	  
+	//get current HeatingCoolingState
+	var url3 = this.apiroute + '/json.htm?type=devices&rid=' + this.HeatingCoolingStateIdx
+	this.log.debug('Getting status: %s', url3)
+
+	this._httpRequest(url3, '', this.http_method, function (error, response, responseBody) {
+	  if (error) {
+		this.log.warn('Error getting status: %s', error.message)
+		this.service.getCharacteristic(Characteristic.TargetTemperature).updateValue(new Error('Polling failed'))
+		callback(error)
+	  } else {
+		this.log.debug('Device response: %s', responseBody)
+		var json = JSON.parse(responseBody)
+		this.service.getCharacteristic(Characteristic.TargetTemperature).updateValue(json.result[0].SetPoint)
+		this.log.debug('Updated TargetTemperature to: %s', json.result[0].SetPoint)
+		callback()
+	  }
+	}.bind(this))	   
+	  
+	  
+	  
+	  
+	  if (this.){
+		var url = this.apiroute + '/json.htm?type=devices&rid=' //on doit ajouter les Idx
+		this.log.debug('Getting status: %s', url)
+
+		this._httpRequest(url, '', this.http_method, function (error, response, responseBody) {
+		  if (error) {
+			this.log.warn('Error getting status: %s', error.message)
+			this.service.getCharacteristic(Characteristic.CurrentHeatingCoolingState).updateValue(new Error('Polling failed'))
+			callback(error)
+		  } else {
+			this.log.debug('Device response: %s', responseBody)
+			var json = JSON.parse(responseBody)
+			this.service.getCharacteristic(Characteristic.TargetTemperature).updateValue(json.targetTemperature)
+			this.log.debug('Updated TargetTemperature to: %s', json.targetTemperature)
+			this.service.getCharacteristic(Characteristic.CurrentTemperature).updateValue(json.currentTemperature)
+			this.log.debug('Updated CurrentTemperature to: %s', json.currentTemperature)
+			this.service.getCharacteristic(Characteristic.TargetHeatingCoolingState).updateValue(json.targetHeatingCoolingState)
+			this.log.debug('Updated TargetHeatingCoolingState to: %s', json.targetHeatingCoolingState)
+			this.service.getCharacteristic(Characteristic.CurrentHeatingCoolingState).updateValue(json.currentHeatingCoolingState)
+			this.log.debug('Updated CurrentHeatingCoolingState to: %s', json.currentHeatingCoolingState)
+			if (this.temperatureThresholds) {
+			  this.service.getCharacteristic(Characteristic.CoolingThresholdTemperature).updateValue(json.coolingThresholdTemperature)
+			  this.log.debug('Updated CoolingThresholdTemperature to: %s', json.coolingThresholdTemperature)
+			  this.service.getCharacteristic(Characteristic.HeatingThresholdTemperature).updateValue(json.heatingThresholdTemperature)
+			  this.log.debug('Updated HeatingThresholdTemperature to: %s', json.heatingThresholdTemperature)
+			}
+			if (this.currentRelativeHumidity) {
+			  this.service.getCharacteristic(Characteristic.CurrentRelativeHumidity).updateValue(json.currentRelativeHumidity)
+			  this.log.debug('Updated CurrentRelativeHumidity to: %s', json.currentRelativeHumidity)
+			}
+			callback()
+		  }
+		}.bind(this))
+	  }
   },
+  
+  
+  
+  
 
   _httpHandler: function (characteristic, value) {
     switch (characteristic) {
