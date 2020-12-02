@@ -43,8 +43,8 @@ function Thermostat (log, config) {
   this.currentRelativeHumidity = config.currentRelativeHumidity || null
   this.targetTemperatureIdx = config.targetTemperatureIdx
   this.targetHeatingCoolingStateIdx = config.targetHeatingCoolingStateIdx || null
-  this.targetHeatingCoolingStateArray = config.targetHeatingCoolingStateArray || null  // ex : [Off, Heat, Cool, Auto] 
-  
+ 
+ 
   if (this.username != null && this.password != null) {
     this.auth = {
       user: this.username,
@@ -112,7 +112,7 @@ Thermostat.prototype = {
 		var json = JSON.parse(responseBody)
 		this.service.getCharacteristic(Characteristic.CurrentTemperature).updateValue(json.result[0].Temp)
 		this.log.debug('Updated CurrentTemperature to: %s', json.result[0].Temp)
-		if (this.currentRelativeHumidity) {
+		if (this.currentRelativeHumidity !=) {
 			  this.service.getCharacteristic(Characteristic.CurrentRelativeHumidity).updateValue(json.result[0].Humidity)
 			  this.log.debug('Updated CurrentRelativeHumidity to: %s', json.result[0].Humidity)
 		}
@@ -121,7 +121,7 @@ Thermostat.prototype = {
 	}.bind(this))
     
     
-  //get Target temperature  
+  //get Target temperature
 	var url2 = this.apiroute + '/json.htm?type=devices&rid=' + this.TargetTemperatureIdx
 	this.log.debug('Getting status: %s', url2)
 
@@ -139,7 +139,11 @@ Thermostat.prototype = {
 	  }
 	}.bind(this))	  
 	  
-	//get current HeatingCoolingState
+	
+	//get current TargetHeatingCoolingState
+	
+	  //MLO : jes suis là ==> a faire : mettre condition sur IDX target heating state
+	
 	var url3 = this.apiroute + '/json.htm?type=devices&rid=' + this.HeatingCoolingStateIdx
 	this.log.debug('Getting status: %s', url3)
 
@@ -151,53 +155,14 @@ Thermostat.prototype = {
 	  } else {
 		this.log.debug('Device response: %s', responseBody)
 		var json = JSON.parse(responseBody)
-		this.service.getCharacteristic(Characteristic.TargetTemperature).updateValue(json.result[0].SetPoint)
-		this.log.debug('Updated TargetTemperature to: %s', json.result[0].SetPoint)
+		var localDataLevel = json.result[0].Level/10 
+		this.service.getCharacteristic(Characteristic.TargetTemperature).updateValue(localDataLevel)
+		this.log.debug('Updated TargetTemperature to: %s', localDataLevel)
 		callback()
 	  }
 	}.bind(this))	   
 	  
-	  
-	  
-	  
-	  if (this.){
-		var url = this.apiroute + '/json.htm?type=devices&rid=' //on doit ajouter les Idx
-		this.log.debug('Getting status: %s', url)
-
-		this._httpRequest(url, '', this.http_method, function (error, response, responseBody) {
-		  if (error) {
-			this.log.warn('Error getting status: %s', error.message)
-			this.service.getCharacteristic(Characteristic.CurrentHeatingCoolingState).updateValue(new Error('Polling failed'))
-			callback(error)
-		  } else {
-			this.log.debug('Device response: %s', responseBody)
-			var json = JSON.parse(responseBody)
-			this.service.getCharacteristic(Characteristic.TargetTemperature).updateValue(json.targetTemperature)
-			this.log.debug('Updated TargetTemperature to: %s', json.targetTemperature)
-			this.service.getCharacteristic(Characteristic.CurrentTemperature).updateValue(json.currentTemperature)
-			this.log.debug('Updated CurrentTemperature to: %s', json.currentTemperature)
-			this.service.getCharacteristic(Characteristic.TargetHeatingCoolingState).updateValue(json.targetHeatingCoolingState)
-			this.log.debug('Updated TargetHeatingCoolingState to: %s', json.targetHeatingCoolingState)
-			this.service.getCharacteristic(Characteristic.CurrentHeatingCoolingState).updateValue(json.currentHeatingCoolingState)
-			this.log.debug('Updated CurrentHeatingCoolingState to: %s', json.currentHeatingCoolingState)
-			if (this.temperatureThresholds) {
-			  this.service.getCharacteristic(Characteristic.CoolingThresholdTemperature).updateValue(json.coolingThresholdTemperature)
-			  this.log.debug('Updated CoolingThresholdTemperature to: %s', json.coolingThresholdTemperature)
-			  this.service.getCharacteristic(Characteristic.HeatingThresholdTemperature).updateValue(json.heatingThresholdTemperature)
-			  this.log.debug('Updated HeatingThresholdTemperature to: %s', json.heatingThresholdTemperature)
-			}
-			if (this.currentRelativeHumidity) {
-			  this.service.getCharacteristic(Characteristic.CurrentRelativeHumidity).updateValue(json.currentRelativeHumidity)
-			  this.log.debug('Updated CurrentRelativeHumidity to: %s', json.currentRelativeHumidity)
-			}
-			callback()
-		  }
-		}.bind(this))
-	  }
   },
-  
-  
-  
   
 
   _httpHandler: function (characteristic, value) {
@@ -210,21 +175,14 @@ Thermostat.prototype = {
         this.service.getCharacteristic(Characteristic.TargetTemperature).updateValue(value)
         this.log('Updated %s to: %s', characteristic, value)
         break
-      case 'coolingThresholdTemperature':
-        this.service.getCharacteristic(Characteristic.CoolingThresholdTemperature).updateValue(value)
-        this.log('Updated %s to: %s', characteristic, value)
-        break
-      case 'heatingThresholdTemperature':
-        this.service.getCharacteristic(Characteristic.HeatingThresholdTemperature).updateValue(value)
-        this.log('Updated %s to: %s', characteristic, value)
-        break
       default:
         this.log.warn('Unknown characteristic "%s" with value "%s"', characteristic, value)
     }
   },
 
+
   setTargetHeatingCoolingState: function (value, callback) {
-    var url = this.apiroute + '/targetHeatingCoolingState?value=' + value
+    var url = this.apiroute + '/json.htm?type=command&param=switchlight&idx=' + this.HeatingCoolingStateIdx + '&switchcmd=Set%20Level&level=' + value
     this.log.debug('Setting targetHeatingCoolingState: %s', url)
 
     this._httpRequest(url, '', this.http_method, function (error, response, responseBody) {
@@ -241,7 +199,7 @@ Thermostat.prototype = {
 
   setTargetTemperature: function (value, callback) {
     value = value.toFixed(1)
-    var url = this.apiroute + '/targetTemperature?value=' + value
+    var url = this.apiroute + '/json.htm?type=command&param=setsetpoint&' + this.TargetTemperatureIdx + '=&setpoint=' + value
     this.log.debug('Setting targetTemperature: %s', url)
 
     this._httpRequest(url, '', this.http_method, function (error, response, responseBody) {
@@ -255,37 +213,6 @@ Thermostat.prototype = {
     }.bind(this))
   },
 
-  setCoolingThresholdTemperature: function (value, callback) {
-    value = value.toFixed(1)
-    var url = this.apiroute + '/coolingThresholdTemperature?value=' + value
-    this.log.debug('Setting coolingThresholdTemperature: %s', url)
-
-    this._httpRequest(url, '', this.http_method, function (error, response, responseBody) {
-      if (error) {
-        this.log.warn('Error setting coolingThresholdTemperature: %s', error.message)
-        callback(error)
-      } else {
-        this.log('Set coolingThresholdTemperature to: %s', value)
-        callback()
-      }
-    }.bind(this))
-  },
-
-  setHeatingThresholdTemperature: function (value, callback) {
-    value = value.toFixed(1)
-    var url = this.apiroute + '/heatingThresholdTemperature?value=' + value
-    this.log.debug('Setting heatingThresholdTemperature: %s', url)
-
-    this._httpRequest(url, '', this.http_method, function (error, response, responseBody) {
-      if (error) {
-        this.log.warn('Error setting heatingThresholdTemperature: %s', error.message)
-        callback(error)
-      } else {
-        this.log('Set heatingThresholdTemperature to: %s', value)
-        callback()
-      }
-    }.bind(this))
-  },
 
   getServices: function () {
     this.informationService = new Service.AccessoryInformation()
@@ -317,25 +244,6 @@ Thermostat.prototype = {
         minStep: this.minStep
       })
 
-    if (this.temperatureThresholds) {
-      this.service
-        .getCharacteristic(Characteristic.CoolingThresholdTemperature)
-        .on('set', this.setCoolingThresholdTemperature.bind(this))
-        .setProps({
-          minValue: this.minTemp,
-          maxValue: this.maxTemp,
-          minStep: this.minStep
-        })
-
-      this.service
-        .getCharacteristic(Characteristic.HeatingThresholdTemperature)
-        .on('set', this.setHeatingThresholdTemperature.bind(this))
-        .setProps({
-          minValue: this.minTemp,
-          maxValue: this.maxTemp,
-          minStep: this.minStep
-        })
-    }
 
     this._getStatus(function () {})
 
