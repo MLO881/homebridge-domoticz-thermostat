@@ -142,30 +142,31 @@ Thermostat.prototype = {
 	  
 	
 	//get current TargetHeatingCoolingState
-	var url3 = this.apiroute + '/json.htm?type=devices&rid=' + this.HeatingCoolingStateIdx
-	this.log.debug('Getting status: %s', url3)
+	if (HeatingCoolingStateIdx !=null) {
+		var url3 = this.apiroute + '/json.htm?type=devices&rid=' + this.HeatingCoolingStateIdx
+		this.log.debug('Getting status: %s', url3)
 
-	this._httpRequest(url3, '', this.http_method, function (error, response, responseBody) {
-	  if (error) {
-		this.log.warn('Error getting status: %s', error.message)
-		this.service.getCharacteristic(Characteristic.TargetHeatingCoolingState).updateValue(new Error('Polling failed'))
-		callback(error)
-	  } else {
-		this.log.debug('Device response: %s', responseBody)
-		var json = JSON.parse(responseBody)
-		if ( json.result[0].hasOwnProperty('Level') ) {
-			var Level = json.result[0].Level/10 
-			this.service.getCharacteristic(Characteristic.TargetHeatingCoolingState).updateValue(Level)
-		} else if ( json.result[0].hasOwnProperty('Mode') ) {
-			this.service.getCharacteristic(Characteristic.TargetHeatingCoolingState).updateValue(json.result[0].Mode)
-			this.log.debug('Updated TargetHeatingCoolingState to: %s', json.result[0].Mode)
-	  	} else {
-			this.log.debug('Updated TargetHeatingCoolingState to: %s', 'error no hasOwnProperty')
-		}
-		callback()
-	  }
-	}.bind(this))	   
-	  
+		this._httpRequest(url3, '', this.http_method, function (error, response, responseBody) {
+		  if (error) {
+			this.log.warn('Error getting status: %s', error.message)
+			this.service.getCharacteristic(Characteristic.TargetHeatingCoolingState).updateValue(new Error('Polling failed'))
+			callback(error)
+		  } else {
+			this.log.debug('Device response: %s', responseBody)
+			var json = JSON.parse(responseBody)
+			if ( json.result[0].hasOwnProperty('Level') ) {
+				var Level = json.result[0].Level/10 
+				this.service.getCharacteristic(Characteristic.TargetHeatingCoolingState).updateValue(Level)
+			} else if ( json.result[0].hasOwnProperty('Mode') ) {
+				this.service.getCharacteristic(Characteristic.TargetHeatingCoolingState).updateValue(json.result[0].Mode)
+				this.log.debug('Updated TargetHeatingCoolingState to: %s', json.result[0].Mode)
+			} else {
+				this.log.debug('Updated TargetHeatingCoolingState to: %s', 'error no hasOwnProperty')
+			}
+			callback()
+		  }
+		}.bind(this))
+	} 
   },
   
 
@@ -186,21 +187,23 @@ Thermostat.prototype = {
 
 
   setTargetHeatingCoolingState: function (value, callback) {
-    var nvalue= value 
-    var svalue= value * 10
-    var url = this.apiroute + '/json.htm?type=command&param=udevice&idx=' + this.HeatingCoolingStateIdx + '&nvalue' + nvalue + ' &svalue' + svalue
-    this.log.debug('Setting targetHeatingCoolingState: %s', url)
+	if (HeatingCoolingStateIdx !=null) {
+	    var nvalue= value 
+	    var svalue= value * 10
+	    var url = this.apiroute + '/json.htm?type=command&param=udevice&idx=' + this.HeatingCoolingStateIdx + '&nvalue' + nvalue + ' &svalue' + svalue
+	    this.log.debug('Setting targetHeatingCoolingState: %s', url)
 
-    this._httpRequest(url, '', this.http_method, function (error, response, responseBody) {
-      if (error) {
-        this.log.warn('Error setting targetHeatingCoolingState: %s', error.message)
-        callback(error)
-      } else {
-        this.log('Set targetHeatingCoolingState to: %s', value)
-        this.service.getCharacteristic(Characteristic.CurrentHeatingCoolingState).updateValue(value)
-        callback()
-      }
-    }.bind(this))
+	    this._httpRequest(url, '', this.http_method, function (error, response, responseBody) {
+	      if (error) {
+		this.log.warn('Error setting targetHeatingCoolingState: %s', error.message)
+		callback(error)
+	      } else {
+		this.log('Set targetHeatingCoolingState to: %s', value)
+		this.service.getCharacteristic(Characteristic.CurrentHeatingCoolingState).updateValue(value)
+		callback()
+	      }
+	    }.bind(this))
+  	}
   },
 
   setTargetTemperature: function (value, callback) {
