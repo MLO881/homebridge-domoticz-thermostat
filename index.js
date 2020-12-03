@@ -142,26 +142,25 @@ Thermostat.prototype = {
 	  
 	
 	//get current TargetHeatingCoolingState
-	//MLO : jes suis là ==> a faire : mettre condition sur IDX target heating state
 	var url3 = this.apiroute + '/json.htm?type=devices&rid=' + this.HeatingCoolingStateIdx
 	this.log.debug('Getting status: %s', url3)
 
 	this._httpRequest(url3, '', this.http_method, function (error, response, responseBody) {
 	  if (error) {
 		this.log.warn('Error getting status: %s', error.message)
-		this.service.getCharacteristic(Characteristic.TargetTemperature).updateValue(new Error('Polling failed'))
+		this.service.getCharacteristic(Characteristic.TargetHeatingCoolingState).updateValue(new Error('Polling failed'))
 		callback(error)
 	  } else {
 		this.log.debug('Device response: %s', responseBody)
 		var json = JSON.parse(responseBody)
 		if ( json.result[0].hasOwnProperty('Level') ) {
-			var localDataLevel = json.result[0].Level/10 
-			this.service.getCharacteristic(Characteristic.TargetTemperature).updateValue(localDataLevel)
-		} else if ( json.result[0].hasOwnProperty('Mode')) {
-			this.service.getCharacteristic(Characteristic.TargetTemperature).updateValue(json.result[0].Mode)
-			this.log.debug('Updated TargetTemperature to: %s', json.result[0].Mode)
+			var Level = json.result[0].Level/10 
+			this.service.getCharacteristic(Characteristic.TargetHeatingCoolingState).updateValue(Level)
+		} else if ( json.result[0].hasOwnProperty('Mode') ) {
+			this.service.getCharacteristic(Characteristic.TargetHeatingCoolingState).updateValue(json.result[0].Mode)
+			this.log.debug('Updated TargetHeatingCoolingState to: %s', json.result[0].Mode)
 	  	} else {
-			this.log.debug('Updated TargetTemperature to: %s', 'error no hasOwnProperty')
+			this.log.debug('Updated TargetHeatingCoolingState to: %s', 'error no hasOwnProperty')
 		}
 		callback()
 	  }
@@ -187,7 +186,9 @@ Thermostat.prototype = {
 
 
   setTargetHeatingCoolingState: function (value, callback) {
-    var url = this.apiroute + '/json.htm?type=command&param=switchlight&idx=' + this.HeatingCoolingStateIdx + '&switchcmd=Set%20Level&level=' + value
+    var nvalue= value 
+    var svalue= value * 10
+    var url = this.apiroute + '/json.htm?type=command&param=udevice&idx=' + this.HeatingCoolingStateIdx + '&nvalue' + nvalue + ' &svalue' + svalue
     this.log.debug('Setting targetHeatingCoolingState: %s', url)
 
     this._httpRequest(url, '', this.http_method, function (error, response, responseBody) {
@@ -204,7 +205,7 @@ Thermostat.prototype = {
 
   setTargetTemperature: function (value, callback) {
     value = value.toFixed(1)
-    var url = this.apiroute + '/json.htm?type=command&param=setsetpoint&' + this.TargetTemperatureIdx + '=&setpoint=' + value
+    var url = this.apiroute + '/json.htm?type=command&param=setsetpoint&idx=' + this.TargetTemperatureIdx + '&setpoint=' + value
     this.log.debug('Setting targetTemperature: %s', url)
 
     this._httpRequest(url, '', this.http_method, function (error, response, responseBody) {
