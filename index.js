@@ -40,9 +40,10 @@ function Thermostat (log, config) {
   this.minStep = config.minStep || 0.5
 
   this.currentTemperatureIdx = config.currentTemperatureIdx
-  this.currentRelativeHumidity = config.currentRelativeHumidity || null
+  this.currentRelativeHumidity = config.currentRelativeHumidity || false
   this.targetTemperatureIdx = config.targetTemperatureIdx
   this.targetHeatingCoolingStateIdx = config.targetHeatingCoolingStateIdx || null
+  this.deviceType = config.deviceType || 'switchlight' // swithlight ou general or ....  
  
  
   if (this.username != null && this.password != null) {
