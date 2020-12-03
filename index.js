@@ -43,7 +43,7 @@ function Thermostat (log, config) {
   this.currentRelativeHumidity = config.currentRelativeHumidity || false
   this.targetTemperatureIdx = config.targetTemperatureIdx
   this.targetHeatingCoolingStateIdx = config.targetHeatingCoolingStateIdx || null
-  this.deviceType = config.deviceType || 'switchlight' // swithlight ou general or ....  
+  //this.deviceType = config.deviceType || 'switchlight' // swithlight ou general or ....  
  
  
   if (this.username != null && this.password != null) {
@@ -142,9 +142,7 @@ Thermostat.prototype = {
 	  
 	
 	//get current TargetHeatingCoolingState
-	
-	  //MLO : jes suis là ==> a faire : mettre condition sur IDX target heating state
-	
+	//MLO : jes suis là ==> a faire : mettre condition sur IDX target heating state
 	var url3 = this.apiroute + '/json.htm?type=devices&rid=' + this.HeatingCoolingStateIdx
 	this.log.debug('Getting status: %s', url3)
 
@@ -156,9 +154,15 @@ Thermostat.prototype = {
 	  } else {
 		this.log.debug('Device response: %s', responseBody)
 		var json = JSON.parse(responseBody)
-		var localDataLevel = json.result[0].Level/10 
-		this.service.getCharacteristic(Characteristic.TargetTemperature).updateValue(localDataLevel)
-		this.log.debug('Updated TargetTemperature to: %s', localDataLevel)
+		if ( json.result[0].hasOwnProperty('Level') ) {
+			var localDataLevel = json.result[0].Level/10 
+			this.service.getCharacteristic(Characteristic.TargetTemperature).updateValue(localDataLevel)
+		} else if ( json.result[0].hasOwnProperty('Mode')) {
+			this.service.getCharacteristic(Characteristic.TargetTemperature).updateValue(json.result[0].Mode)
+			this.log.debug('Updated TargetTemperature to: %s', json.result[0].Mode)
+	  	} else {
+			this.log.debug('Updated TargetTemperature to: %s', 'error no hasOwnProperty')
+		}
 		callback()
 	  }
 	}.bind(this))	   
