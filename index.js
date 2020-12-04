@@ -73,8 +73,9 @@ if (this.listener) {
   }
   
   this.service = new Service.Thermostat(this.name)
+  */
 }
-*/
+
 
 Thermostat.prototype = {
 
