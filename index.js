@@ -20,7 +20,7 @@ function Thermostat (log, config) {
   //listener TBC
   //this.listener = config.listener || false
   //this.port = config.port || 2000
-  this.requestArray = ['targetHeatingCoolingState', 'targetTemperature']
+  //this.requestArray = ['targetHeatingCoolingState', 'targetTemperature']
 
   this.manufacturer = config.manufacturer || packageJson.author.name
   this.serial = config.serial || this.apiroute
@@ -40,7 +40,7 @@ function Thermostat (log, config) {
   this.minStep = config.minStep || 0.5
 
   this.currentTemperatureIdx = config.currentTemperatureIdx
-  this.currentRelativeHumidity = config.currentRelativeHumidity || null
+  this.currentRelativeHumidity = config.currentRelativeHumidity || false
   this.targetTemperatureIdx = config.targetTemperatureIdx
   this.targetHeatingCoolingStateIdx = config.targetHeatingCoolingStateIdx || null
  
@@ -112,7 +112,7 @@ Thermostat.prototype = {
 		var json = JSON.parse(responseBody)
 		this.service.getCharacteristic(Characteristic.CurrentTemperature).updateValue(json.result[0].Temp)
 		this.log.debug('Updated CurrentTemperature to: %s', json.result[0].Temp)
-		if (this.currentRelativeHumidity !=) {
+		if (this.currentRelativeHumidity) {
 			  this.service.getCharacteristic(Characteristic.CurrentRelativeHumidity).updateValue(json.result[0].Humidity)
 			  this.log.debug('Updated CurrentRelativeHumidity to: %s', json.result[0].Humidity)
 		}
@@ -127,38 +127,35 @@ Thermostat.prototype = {
 
 	this._httpRequest(url2, '', this.http_method, function (error, response, responseBody) {
 	  if (error) {
-		this.log.warn('Error getting status: %s', error.message)
-		this.service.getCharacteristic(Characteristic.TargetTemperature).updateValue(new Error('Polling failed'))
-		callback(error)
+      this.log.warn('Error getting status: %s', error.message)
+      this.service.getCharacteristic(Characteristic.TargetTemperature).updateValue(new Error('Polling failed'))
+      callback(error)
 	  } else {
-		this.log.debug('Device response: %s', responseBody)
-		var json = JSON.parse(responseBody)
-		this.service.getCharacteristic(Characteristic.TargetTemperature).updateValue(json.result[0].SetPoint)
-		this.log.debug('Updated TargetTemperature to: %s', json.result[0].SetPoint)
-		callback()
+      this.log.debug('Device response: %s', responseBody)
+      var json = JSON.parse(responseBody)
+      this.service.getCharacteristic(Characteristic.TargetTemperature).updateValue(json.result[0].SetPoint)
+      this.log.debug('Updated TargetTemperature to: %s', json.result[0].SetPoint)
+      callback()
 	  }
 	}.bind(this))	  
 	  
 	
 	//get current TargetHeatingCoolingState
-	
-	  //MLO : jes suis là ==> a faire : mettre condition sur IDX target heating state
-	
 	var url3 = this.apiroute + '/json.htm?type=devices&rid=' + this.HeatingCoolingStateIdx
 	this.log.debug('Getting status: %s', url3)
 
 	this._httpRequest(url3, '', this.http_method, function (error, response, responseBody) {
 	  if (error) {
-		this.log.warn('Error getting status: %s', error.message)
-		this.service.getCharacteristic(Characteristic.TargetTemperature).updateValue(new Error('Polling failed'))
-		callback(error)
+      this.log.warn('Error getting status: %s', error.message)
+      this.service.getCharacteristic(Characteristic.TargetTemperature).updateValue(new Error('Polling failed'))
+      callback(error)
 	  } else {
-		this.log.debug('Device response: %s', responseBody)
-		var json = JSON.parse(responseBody)
-		var localDataLevel = json.result[0].Level/10 
-		this.service.getCharacteristic(Characteristic.TargetTemperature).updateValue(localDataLevel)
-		this.log.debug('Updated TargetTemperature to: %s', localDataLevel)
-		callback()
+      this.log.debug('Device response: %s', responseBody)
+      var json = JSON.parse(responseBody)
+      var localDataLevel = json.result[0].Level/10 
+      this.service.getCharacteristic(Characteristic.TargetTemperature).updateValue(localDataLevel)
+      this.log.debug('Updated TargetTemperature to: %s', localDataLevel)
+      callback()
 	  }
 	}.bind(this))	   
 	  
