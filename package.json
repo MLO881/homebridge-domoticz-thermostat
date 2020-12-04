@@ -1,6 +1,6 @@
 {
   "name": "hombridge-domoticz-thermostat",
-  "version": "",
+  "version": "0.0.1",
   "description": "Homebridge plugin for a to built a thermostat from Domoticz",
   "main": "index.js",
   "dependencies": {
@@ -26,5 +26,5 @@
   "bugs": {
     "url": ""
   },
-  "homepage": ""
+  "homepage": "https://github.com/MLO881/hombridge-domoticz-thermostat"
 }

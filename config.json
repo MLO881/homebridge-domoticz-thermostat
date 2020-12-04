@@ -1,0 +1,19 @@
+"accessories": [
+  {
+    "accessory": "Thermostat",
+    "name": "Thermostat Axel",
+    "apiroute": "http://localhost:8080",
+    "currentTemperatureIdx": "270",
+    "targetTemperatureIdx" : "255",
+    "targetHeatingCoolingStateIdx": "254"
+  }
+  {
+    "accessory": "Thermostat",
+    "name": "Thermostat Bureau",
+    "apiroute": "http://localhost:8080",
+    "currentTemperatureIdx": "94",
+    "currentRelativeHumidity": true,
+    "targetTemperatureIdx" : "110",
+    "targetHeatingCoolingStateIdx": "116"
+  }
+],
