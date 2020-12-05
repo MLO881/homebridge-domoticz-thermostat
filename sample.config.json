@@ -6,7 +6,7 @@
     "currentTemperatureIdx": "270",
     "targetTemperatureIdx" : "255",
     "targetHeatingCoolingStateIdx": "254"
-  }
+  },
   {
     "accessory": "Thermostat",
     "name": "Thermostat Bureau",
