@@ -101,7 +101,7 @@ Thermostat.prototype = {
 	
   //get Temperature + humidity Data  
 	var url1 = this.apiroute + '/json.htm?type=devices&rid=' + this.CurrentTemperatureIdx
-	this.log.debug('Getting status: %s', url1)
+	this.log.debug('Getting status URL1: %s', url1)
 
 	this._httpRequest(url1, '', this.http_method, function (error, response, responseBody) {
 	  if (error) {
@@ -124,7 +124,7 @@ Thermostat.prototype = {
     
   //get Target temperature
 	var url2 = this.apiroute + '/json.htm?type=devices&rid=' + this.TargetTemperatureIdx
-	this.log.debug('Getting status: %s', url2)
+	this.log.debug('Getting status URL2: %s', url2)
 
 	this._httpRequest(url2, '', this.http_method, function (error, response, responseBody) {
 	  if (error) {
@@ -144,7 +144,7 @@ Thermostat.prototype = {
 	//get current TargetHeatingCoolingState
 	if (heatingCoolingStateIdx !=null) {
 		var url3 = this.apiroute + '/json.htm?type=devices&rid=' + this.heatingCoolingStateIdx
-		this.log.debug('Getting status: %s', url3)
+		this.log.debug('Getting status URL3: %s', url3)
 
 		this._httpRequest(url3, '', this.http_method, function (error, response, responseBody) {
 		  if (error) {
