@@ -187,7 +187,7 @@ Thermostat.prototype = {
 
 
   setTargetHeatingCoolingState: function (value, callback) {
-	if (heatingCoolingStateIdx !=null) {
+	if (this.heatingCoolingStateIdx !=null) {
 	    var nvalue= value 
 	    var svalue= value * 10
 	    var url = this.apiroute + '/json.htm?type=command&param=udevice&idx=' + this.heatingCoolingStateIdx + '&nvalue' + nvalue + ' &svalue' + svalue
