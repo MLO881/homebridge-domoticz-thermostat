@@ -232,7 +232,7 @@ Thermostat.prototype = {
       .setCharacteristic(Characteristic.SerialNumber, this.serial)
       .setCharacteristic(Characteristic.FirmwareRevision, this.firmware)
 
-    this.service.getCharacteristic(Characteristic.TemperatureDisplayUnits).updateValue(this.temperatureDisplayUnits)
+    //this.service.getCharacteristic(Characteristic.TemperatureDisplayUnits).updateValue(this.temperatureDisplayUnits)
 
     this.service
       .getCharacteristic(Characteristic.TargetHeatingCoolingState)
