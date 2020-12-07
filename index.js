@@ -7,10 +7,10 @@ const http = require('http')
 module.exports = function (homebridge) {
   Service = homebridge.hap.Service
   Characteristic = homebridge.hap.Characteristic
-  homebridge.registerAccessory('homebridge-domoticz-thermostat', 'Domoticz-Thermostat', Domoticz-Thermostat)
+  homebridge.registerAccessory('homebridge-domoticz-thermostat', 'Domoticz-Thermostat', DomoticzThermostat)
 }
 
-function Domoticz-Thermostat (log, config) {
+function DomoticzThermostat (log, config) {
   this.log = log
 
   this.name = config.name
@@ -53,11 +53,11 @@ function Domoticz-Thermostat (log, config) {
     }
   }
 
-  this.service = new Service.Thermostat(this.name)
+  this.service = new Service.DomoticzThermostat(this.name)
 }
 
 
-Thermostat.prototype = {
+DomoticzThermostat.prototype = {
 
   identify: function (callback) {
     this.log('Identify requested!')
