@@ -71,9 +71,8 @@ if (this.listener) {
       this.log('Listen server: http://%s:%s', ip.address(), this.port)
     }.bind(this))
   }
-  
+ */
   this.service = new Service.Thermostat(this.name)
-  */
 }
 
 
@@ -232,7 +231,7 @@ Thermostat.prototype = {
       .setCharacteristic(Characteristic.SerialNumber, this.serial)
       .setCharacteristic(Characteristic.FirmwareRevision, this.firmware)
 
-    //this.service.getCharacteristic(Characteristic.TemperatureDisplayUnits).updateValue(this.temperatureDisplayUnits)
+    this.service.getCharacteristic(Characteristic.TemperatureDisplayUnits).updateValue(this.temperatureDisplayUnits)
 
     this.service
       .getCharacteristic(Characteristic.TargetHeatingCoolingState)
