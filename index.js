@@ -42,7 +42,7 @@ function Thermostat (log, config) {
   this.currentTemperatureIdx = config.currentTemperatureIdx
   this.currentRelativeHumidity = config.currentRelativeHumidity || false
   this.targetTemperatureIdx = config.targetTemperatureIdx
-  this.targetHeatingCoolingStateIdx = config.targetHeatingCoolingStateIdx || null
+  this.heatingCoolingStateIdx = config.heatingCoolingStateIdx || null
   //this.deviceType = config.deviceType || 'switchlight' // swithlight ou general or ....  
  
  
@@ -142,8 +142,8 @@ Thermostat.prototype = {
 	  
 	
 	//get current TargetHeatingCoolingState
-	if (HeatingCoolingStateIdx !=null) {
-		var url3 = this.apiroute + '/json.htm?type=devices&rid=' + this.HeatingCoolingStateIdx
+	if (heatingCoolingStateIdx !=null) {
+		var url3 = this.apiroute + '/json.htm?type=devices&rid=' + this.heatingCoolingStateIdx
 		this.log.debug('Getting status: %s', url3)
 
 		this._httpRequest(url3, '', this.http_method, function (error, response, responseBody) {
@@ -187,10 +187,10 @@ Thermostat.prototype = {
 
 
   setTargetHeatingCoolingState: function (value, callback) {
-	if (HeatingCoolingStateIdx !=null) {
+	if (heatingCoolingStateIdx !=null) {
 	    var nvalue= value 
 	    var svalue= value * 10
-	    var url = this.apiroute + '/json.htm?type=command&param=udevice&idx=' + this.HeatingCoolingStateIdx + '&nvalue' + nvalue + ' &svalue' + svalue
+	    var url = this.apiroute + '/json.htm?type=command&param=udevice&idx=' + this.heatingCoolingStateIdx + '&nvalue' + nvalue + ' &svalue' + svalue
 	    this.log.debug('Setting targetHeatingCoolingState: %s', url)
 
 	    this._httpRequest(url, '', this.http_method, function (error, response, responseBody) {
