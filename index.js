@@ -142,7 +142,7 @@ Thermostat.prototype = {
 	  
 	
 	//get current TargetHeatingCoolingState
-	if (heatingCoolingStateIdx !=null) {
+	if (this.heatingCoolingStateIdx !=null) {
 		var url3 = this.apiroute + '/json.htm?type=devices&rid=' + this.heatingCoolingStateIdx
 		this.log.debug('Getting status URL3: %s', url3)
 
