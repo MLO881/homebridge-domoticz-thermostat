@@ -5,7 +5,7 @@
     "apiroute": "http://localhost:8080",
     "currentTemperatureIdx": "270",
     "targetTemperatureIdx" : "255",
-    "targetHeatingCoolingStateIdx": "254"
+    "heatingCoolingStateIdx": "254"
   },
   {
     "accessory": "Thermostat",
