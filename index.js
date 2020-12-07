@@ -143,7 +143,7 @@ Thermostat.prototype = {
 	
 	//get current TargetHeatingCoolingState
 	this.log.debug('heatingCoolingStateIdx: %s', this.heatingCoolingStateIdx)
-	if (this.heatingCoolingStateIdx !=null) {
+	if (this.heatingCoolingStateIdx != null) {
 		var url3 = this.apiroute + '/json.htm?type=devices&rid=' + this.heatingCoolingStateIdx
 		this.log.debug('Getting status URL3: %s', url3)
 
@@ -188,7 +188,7 @@ Thermostat.prototype = {
 
 
   setTargetHeatingCoolingState: function (value, callback) {
-	if (this.heatingCoolingStateIdx !=null) {
+	if (this.heatingCoolingStateIdx != null) {
 	    var nvalue= value 
 	    var svalue= value * 10
 	    var url = this.apiroute + '/json.htm?type=command&param=udevice&idx=' + this.heatingCoolingStateIdx + '&nvalue' + nvalue + ' &svalue' + svalue
@@ -209,7 +209,7 @@ Thermostat.prototype = {
 
   setTargetTemperature: function (value, callback) {
     value = value.toFixed(1)
-    var url = this.apiroute + '/json.htm?type=command&param=setsetpoint&idx=' + this.TargetTemperatureIdx + '&setpoint=' + value
+    var url = this.apiroute + '/json.htm?type=command&param=setsetpoint&idx=' + this.targetTemperatureIdx + '&setpoint=' + value
     this.log.debug('Setting targetTemperature: %s', url)
 
     this._httpRequest(url, '', this.http_method, function (error, response, responseBody) {
