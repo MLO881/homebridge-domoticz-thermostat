@@ -1,5 +1,5 @@
 {
-  "name": "hombridge-domoticz-thermostat",
+  "name": "homebridge-domoticz-thermostat",
   "displayName" : "Home thermostat",
   "version": "0.0.1",
   "description": "Homebridge plugin for a to built a thermostat from Domoticz",
