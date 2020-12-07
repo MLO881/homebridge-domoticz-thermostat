@@ -1,6 +1,6 @@
 "accessories": [
   {
-    "accessory": "DomoticzThermostat",
+    "accessory": "Thermostat",
     "name": "Thermostat Axel",
     "apiroute": "http://localhost:8080",
     "currentTemperatureIdx": "270",
@@ -8,7 +8,7 @@
     "heatingCoolingStateIdx": "254"
   },
   {
-    "accessory": "DomoticzThermostat",
+    "accessory": "Thermostat",
     "name": "Thermostat Bureau",
     "apiroute": "http://localhost:8080",
     "currentTemperatureIdx": "94",
