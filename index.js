@@ -7,10 +7,10 @@ const http = require('http')
 module.exports = function (homebridge) {
   Service = homebridge.hap.Service
   Characteristic = homebridge.hap.Characteristic
-  homebridge.registerAccessory('homebridge-domoticz-thermostat', 'Thermostat', Thermostat)
+  homebridge.registerAccessory('homebridge-domoticz-thermostat', 'Domoticz-Thermostat', Domoticz-Thermostat)
 }
 
-function Thermostat (log, config) {
+function Domoticz-Thermostat (log, config) {
   this.log = log
 
   this.name = config.name
@@ -53,25 +53,6 @@ function Thermostat (log, config) {
     }
   }
 
-/*  listener TBC
-if (this.listener) {
-    this.server = http.createServer(function (request, response) {
-      var baseURL = 'http://' + request.headers.host + '/'
-      var url = new URL(request.url, baseURL)
-      if (this.requestArray.includes(url.pathname.substr(1))) {
-        this.log.debug('Handling request')
-        response.end('Handling request')
-        this._httpHandler(url.pathname.substr(1), url.searchParams.get('value'))
-      } else {
-        this.log.warn('Invalid request: %s', request.url)
-        response.end('Invalid request')
-      }
-    }.bind(this))
-    this.server.listen(this.port, function () {
-      this.log('Listen server: http://%s:%s', ip.address(), this.port)
-    }.bind(this))
-  }
- */
   this.service = new Service.Thermostat(this.name)
 }
 

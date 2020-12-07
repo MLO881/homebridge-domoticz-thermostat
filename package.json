@@ -1,8 +1,8 @@
 {
   "name": "homebridge-domoticz-thermostat",
   "displayName" : "Home thermostat",
-  "version": "0.0.1",
-  "description": "Homebridge plugin for a to built a thermostat from Domoticz",
+  "version": "1.0.0",
+  "description": "Homebridge plugin for a to (re)built a thermostat from Domoticz devices",
   "main": "index.js",
   "dependencies": {
     "request": ">=2.88.0",
@@ -22,7 +22,7 @@
   "keywords": [
     "homebridge-plugin"
   ],
-  "author": "Mael Louty",
+  "author": "MLO881",
   "license": "GNU",
   "bugs": {
     "url": ""
