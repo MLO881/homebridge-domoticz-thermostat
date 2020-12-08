@@ -10,17 +10,14 @@
 </span>
 
 ## Description
-Rebuild a thermostat from domoticz webdata
-When including or creating Thermostat with Domoticz, the platform separate into several devices (Temparature, setpoint, switch, ...).  
-This [homebridge](https://github.com/nfarina/homebridge) plugin exposes allow to rebuilt thermostat into the Homebridge display. 
-Using simple HTTP requests from the Domoticz Json API, the plugin allows you to set the thermostat mode and control the target temperature.
+When including or creating Thermostat with Domoticz, the platform separate into several devices (Temparature, setpoint, switch, ...). This [homebridge](https://github.com/nfarina/homebridge) plugin exposes allow to rebuilt thermostat into the Homebridge display. Using simple HTTP requests to the Domoticz Json API, the plugin allows you to set the thermostat mode and control the target temperature.
 
-this project is a fork from [hombridge-web-thermostat](XXXXX)
+this project is based on [hombridge-web-thermostat](https://github.com/Tommrodrigues/homebridge-web-thermostat)
 
 ## Installation
 
 1. Install [homebridge](https://github.com/nfarina/homebridge#installation-details)
-2. Install this plugin: `npm install -g git+XXXXXXX`
+2. Install this plugin: `npm install -g git+https://github.com/MLO881/homebridge-domoticz-thermostat.git`
 3. Update your `config.json` file
 
 ## Configuration
