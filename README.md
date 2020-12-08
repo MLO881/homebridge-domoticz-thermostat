@@ -13,14 +13,14 @@
 When including or creating Thermostat with Domoticz, the platform separate into several devices (Temparature, setpoint, switch, ...). This [homebridge](https://github.com/nfarina/homebridge) plugin exposes allow to rebuilt thermostat into the Homebridge display. Using simple HTTP requests to the [Domoticz Json API](https://www.domoticz.com/wiki/Domoticz_API/JSON_URL's), the plugin allows you to set the thermostat mode and control the target temperature.
 
 The switch Controlling your heater must be a Domoticz "Selector Switch" with 4 levels even each are not used.
-| `Homebridge Level` | `Name` | `Domoticz Level` |
+| Homebridge Leve | Name | Domoticz Level  |
 | --- | --- | --- |
 | `0` | `Off` | `0` |
 | `1` | `Heat` | `10` |
 | `2` | `Cool` | `20` |
 | `3` | `Auto` | `30` |
 
-**Note:** This project is based on [hombridge-web-thermostat](https://github.com/Tommrodrigues/homebridge-web-thermostat)
+**Note:** This project is based on [homebridge-web-thermostat](https://github.com/Tommrodrigues/homebridge-web-thermostat)
 
 ## Installation
 
