@@ -45,6 +45,7 @@ this project is based on [hombridge-web-thermostat](https://github.com/Tommrodri
 ### Optional fields
 | Key | Description | Default |
 | --- | --- | --- |
+| `currentRelativeHumidity` | Wheteher your temerature sensor is also humitity sensor | `false` |
 | `temperatureDisplayUnits` | Whether you want °C (`0`) or °F (`1`) as your units | `0` |
 | `heatOnly` | Whether to only expose the heating characteristic, and not cooling/auto | `false` |
 | `maxTemp` | Upper bound for the temperature selector in the Home app | `30` |
