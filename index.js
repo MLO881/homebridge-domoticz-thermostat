@@ -17,11 +17,6 @@ function Thermostat (log, config) {
   this.apiroute = config.apiroute
   this.pollInterval = config.pollInterval || 300
   
-  //listener TBC
-  //this.listener = config.listener || false
-  //this.port = config.port || 2000
-  //this.requestArray = ['targetHeatingCoolingState', 'targetTemperature']
-
   this.manufacturer = config.manufacturer || packageJson.author.name
   this.serial = config.serial || this.apiroute
   this.model = config.model || packageJson.name
@@ -43,7 +38,6 @@ function Thermostat (log, config) {
   this.currentRelativeHumidity = config.currentRelativeHumidity || false
   this.targetTemperatureIdx = config.targetTemperatureIdx
   this.heatingCoolingStateIdx = config.heatingCoolingStateIdx || null
-  //this.deviceType = config.deviceType || 'switchlight' // swithlight ou general or ....  
  
  
   if (this.username != null && this.password != null) {
