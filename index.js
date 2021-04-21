@@ -237,5 +237,5 @@ Thermostat.prototype = {
     }.bind(this), this.pollInterval * 1000);
 
     return [this.informationService, this.service];
-  }
-}
+  };
+};
