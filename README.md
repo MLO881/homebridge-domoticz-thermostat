@@ -5,7 +5,7 @@
 
 <span align="center">
 
-# hombridge-domoticz-thermostat
+# homebridge-domoticz-thermostat
 
 </span>
 
